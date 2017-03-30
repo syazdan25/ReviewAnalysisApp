@@ -13,6 +13,7 @@
         android:id="@+id/editText"
         android:layout_width="306dp"
         android:layout_height="162dp"
+        style="@style/Widget.AppCompat.EditText"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintTop_toTopOf="@+id/guideline3"
@@ -22,6 +23,7 @@
 
     <Button
         android:id="@+id/button"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="304dp"
         android:layout_height="42dp"
         android:text="Analyze it!!"
@@ -55,6 +57,7 @@
 
     <TextView
         android:id="@+id/textView"
+        style="@style/Widget.AppCompat.TextView.SpinnerItem"
         android:layout_width="300dp"
         android:layout_height="32dp"
         android:text="Enter the text for analysis"
