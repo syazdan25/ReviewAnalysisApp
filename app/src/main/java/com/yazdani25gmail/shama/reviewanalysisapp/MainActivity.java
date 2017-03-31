@@ -14,9 +14,6 @@ import android.view.View;
 import java.util.Map;
 import java.util.HashMap;
 import android.webkit.WebChromeClient;
-// adding fileChooser
-import android.app.Activity;
-
 
 //adding Watson Developer Cloud SDK for Java:
 import com.ibm.watson.developer_cloud.alchemy.v1.AlchemyLanguage;
@@ -107,12 +104,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    WebChromeClient client= new WebChromeClient(){
-        @Override
-        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-
-            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
-        }
-    };
 }
