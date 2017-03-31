@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
             else if(result== "NEGATIVE"){
                 thumb.setImageResource(R.drawable.thumbdown);
             }
+            else if(result== "NEUTRAL"){
+                thumb.setImageResource(R.drawable.neutral);
+            }
+            textView.setText("Enter Review for analysis");
             textView1 = (TextView) findViewById(R.id.textView1);
             textView1.setText("Your Review is: " + result);
         }
