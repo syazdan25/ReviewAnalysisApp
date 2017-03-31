@@ -7,6 +7,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.AsyncTask;
 import android.view.View;
@@ -25,9 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     TextView textView;
+    TextView textView1;
     EditText editText;
     Button button;
     String sentiment;
+    ImageView thumb;
 
 
 
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textView.setText("what is happening inside a thread - we are running Watson AlchemyAPI");
+                    textView.setText("Fetching Sentiment from Watson AlchemyAPI");
                 }
             });
 
@@ -87,7 +90,16 @@ public class MainActivity extends AppCompatActivity {
         //setting the value of UI outside of the thread
         @Override
         protected void onPostExecute(String result) {
-            textView.setText("The message's sentiment is: " + result);
+
+            thumb = (ImageView) findViewById(R.id.imageView);
+            if(result== "POSITIVE"){
+                thumb.setImageResource(R.drawable.thumbup);
+            }
+            else if(result== "NEGATIVE"){
+                thumb.setImageResource(R.drawable.thumbdown);
+            }
+            textView1 = (TextView) findViewById(R.id.textView1);
+            textView1.setText("Your Review is: " + result);
         }
     }
 
