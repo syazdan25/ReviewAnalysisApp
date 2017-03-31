@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class FileUpload extends AppCompatActivity {
 
-    public static int PICKFILE_RESULT_CODE=234;
+    public static int PICKFILE_RESULT_CODE=1;
     TextView textView3;
     Button bChoose;
     Button bUpload;
@@ -43,21 +43,27 @@ public class FileUpload extends AppCompatActivity {
         if(requestCode==PICKFILE_RESULT_CODE && requestCode== RESULT_OK && data != null && data.getData() != null){
             filePath= data.getData();
 
+
         }
     }
 
     //File Chooser Method
     private void showFilechooser(){
         Intent intentTxt = new Intent(Intent.ACTION_GET_CONTENT);
-        intentTxt.setType("text/plain");
+        /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("text/*");
+        startActivityForResult(intent,PICKFILE_RESULT_CODE);*/
+
+        intentTxt.setType("text/*");
         intentTxt.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(Intent.createChooser(intentTxt,"Select .txt file"),PICKFILE_RESULT_CODE);
+
 
     }
 
     private void uploadFile(){
 
-        if(filePath !=null) {
+        if(filePath != null) {
 
             final ProgressDialog pd= new ProgressDialog(this);
             pd.setTitle("Uploading....");
@@ -82,6 +88,7 @@ public class FileUpload extends AppCompatActivity {
                     });
         }else{
             //error
+            Toast.makeText(getApplicationContext(),"File Path Error", Toast.LENGTH_LONG).show();
         }
 
     }
