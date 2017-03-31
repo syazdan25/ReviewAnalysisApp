@@ -1,18 +1,23 @@
 package com.yazdani25gmail.shama.reviewanalysisapp;
 
 import android.app.ProgressDialog;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.view.View.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,67 +33,72 @@ import java.util.Map;
 
 public class FileUpload extends AppCompatActivity {
 
-    public static int PICKFILE_RESULT_CODE=1;
+
+    private static final String TAG = "FileChooser";
+    public static final int REQUEST_CODE=6384;
     TextView textView3;
     Button bChoose;
     Button bUpload;
     String sentiment;
     private Uri filePath;
-    private StorageReference mStorageRef;
+    private StorageReference storageReference;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==PICKFILE_RESULT_CODE && requestCode== RESULT_OK && data != null && data.getData() != null){
-            filePath= data.getData();
 
-
+                if (requestCode==REQUEST_CODE && resultCode== RESULT_OK && data != null && data.getData() != null) {
+                    filePath= data.getData();
         }
     }
 
     //File Chooser Method
     private void showFilechooser(){
-        Intent intentTxt = new Intent(Intent.ACTION_GET_CONTENT);
-        /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/*");
-        startActivityForResult(intent,PICKFILE_RESULT_CODE);*/
 
+
+
+        Intent intentTxt = new Intent();
         intentTxt.setType("text/*");
+        intentTxt.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intentTxt,"Select a File"),REQUEST_CODE);
+
+        /*intentTxt.setType("text/*");
         intentTxt.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(Intent.createChooser(intentTxt,"Select .txt file"),PICKFILE_RESULT_CODE);
+        startActivityForResult(Intent.createChooser(intentTxt,"Select .txt file"),PICKFILE_RESULT_CODE);*/
 
 
     }
 
     private void uploadFile(){
 
+
         if(filePath != null) {
+            //Progress Dialog for uploading
+            final ProgressDialog progressDialog= new ProgressDialog(this);
+            progressDialog.setTitle("File Uploading..");
 
-            final ProgressDialog pd= new ProgressDialog(this);
-            pd.setTitle("Uploading....");
-
-            StorageReference riversRef = mStorageRef.child("file/review.txt");
+            StorageReference riversRef = storageReference.child("images/review.txt");
 
             riversRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            pd.dismiss();
-                            Toast.makeText(getApplicationContext(),"File Uploaded", Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "File Uploaded", Toast.LENGTH_LONG).show();
 
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            pd.dismiss();
-                            Toast.makeText(getApplicationContext(),exception.getMessage(), Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+
                         }
                     });
-        }else{
-            //error
-            Toast.makeText(getApplicationContext(),"File Path Error", Toast.LENGTH_LONG).show();
+        }else {
+            //file path null
         }
 
     }
@@ -105,7 +115,7 @@ public class FileUpload extends AppCompatActivity {
         bUpload = (Button) findViewById(R.id.button5);
 
         //storage reference
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         //File Chooser Button
         bChoose.setOnClickListener(new View.OnClickListener() {@Override
