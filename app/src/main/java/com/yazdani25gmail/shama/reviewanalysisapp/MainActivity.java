@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private class AskWatsonTask extends AsyncTask<String, Void, String> {
+
+        int posval,negval;
         @Override
         protected String doInBackground(String... textsToAnalyse) {
             System.out.println(editText.getText());
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(sentiment);
 
             //passing the result to be displayed at UI in the main tread
+            posval=sentiment.getSentiment().getScore().intValue();
             return sentiment.getSentiment().getType().name();
 
         }
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             }
             textView.setText("Enter Review for analysis");
             textView1 = (TextView) findViewById(R.id.textView1);
-            textView1.setText("Your Review is: " + result);
+            textView1.setText("Your Review is: " + result+"\nScore=");
         }
     }
 

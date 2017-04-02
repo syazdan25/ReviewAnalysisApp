@@ -3,6 +3,10 @@ package com.yazdani25gmail.shama.reviewanalysisapp;
 import android.app.ProgressDialog;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.database.Cursor;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.view.View.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,6 +32,20 @@ import com.google.firebase.storage.UploadTask;
 import com.ibm.watson.developer_cloud.alchemy.v1.AlchemyLanguage;
 import com.ibm.watson.developer_cloud.alchemy.v1.model.DocumentSentiment;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,13 +53,58 @@ public class FileUpload extends AppCompatActivity {
 
 
     private static final String TAG = "FileChooser";
+    private static final int READ_REQUEST_CODE = 42;
     public static final int REQUEST_CODE=6384;
+    private static final int EDIT_REQUEST_CODE = 44;
     TextView textView3;
     Button bChoose;
     Button bUpload;
-    String sentiment;
+    Button bAnalyze;
+
+    String str;
     private Uri filePath;
     private StorageReference storageReference;
+    String convertedPath;
+    String line;
+    String sentiment;
+    String result;
+
+
+
+    private void editDocument() {
+        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's
+        // file browser.
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+        // Filter to only show results that can be "opened", such as a
+        // file (as opposed to a list of contacts or timezones).
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Filter to show only text files.
+        intent.setType("text/plain");
+
+        startActivityForResult(intent, EDIT_REQUEST_CODE);
+    }
+
+    private void alterDocument(Uri uri) {
+        try {
+            ParcelFileDescriptor pfd = this.getContentResolver().
+                    openFileDescriptor(uri, "w");
+            FileOutputStream fileOutputStream =
+                    new FileOutputStream(pfd.getFileDescriptor());
+            fileOutputStream.write(("Overwritten by MyCloud at " +
+                    System.currentTimeMillis() + "\n").getBytes());
+            // Let the document provider know you're done by closing the stream.
+            fileOutputStream.close();
+            pfd.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -50,7 +113,10 @@ public class FileUpload extends AppCompatActivity {
 
                 if (requestCode==REQUEST_CODE && resultCode== RESULT_OK && data != null && data.getData() != null) {
                     filePath= data.getData();
-        }
+                    alterDocument(filePath);
+
+
+                }
     }
 
     //File Chooser Method
@@ -70,9 +136,8 @@ public class FileUpload extends AppCompatActivity {
 
     }
 
+    //File upload
     private void uploadFile(){
-
-
         if(filePath != null) {
             //Progress Dialog for uploading
             final ProgressDialog progressDialog= new ProgressDialog(this);
@@ -99,9 +164,12 @@ public class FileUpload extends AppCompatActivity {
                     });
         }else {
             //file path null
+            Toast.makeText(getApplicationContext(), "File path not found", Toast.LENGTH_LONG).show();
         }
 
     }
+
+
 
 
     @Override
@@ -113,6 +181,7 @@ public class FileUpload extends AppCompatActivity {
         textView3 = (TextView) findViewById(R.id.textView2);
         bChoose = (Button) findViewById(R.id.button4);
         bUpload = (Button) findViewById(R.id.button5);
+        bAnalyze = (Button) findViewById(R.id.button6);
 
         //storage reference
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -122,7 +191,10 @@ public class FileUpload extends AppCompatActivity {
 
         public void onClick(View v) {
             //open file chooser
-            showFilechooser();
+            //
+            // showFilechooser();
+            //performFileSearch();
+            editDocument();
         }
         });
 
@@ -134,6 +206,21 @@ public class FileUpload extends AppCompatActivity {
             uploadFile();
         }
         });
+
+
+        //Analyze
+        bAnalyze.setOnClickListener(new View.OnClickListener() {@Override
+
+        public void onClick(View v) {
+            //open file chooser
+            //analyze();
+
+        }
+        });
+
+
+
+
 
 
 
