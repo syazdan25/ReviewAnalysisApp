@@ -41,7 +41,7 @@ public class Welcome extends AppCompatActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent page2= new Intent(Welcome.this,FileUpload.class);
+                Intent page2= new Intent(Welcome.this,ReviewSentiment.class);
                 startActivity(page2);
             }
         });

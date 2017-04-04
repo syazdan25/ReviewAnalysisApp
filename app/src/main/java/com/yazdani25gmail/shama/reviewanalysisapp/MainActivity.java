@@ -3,6 +3,7 @@ package com.yazdani25gmail.shama.reviewanalysisapp;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         editText = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
+
 
         //fire action when button is pressed
 
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
             textView.setText("Enter Review for analysis");
             textView1 = (TextView) findViewById(R.id.textView1);
-            textView1.setText("Your Review is: " + result+"\nScore=");
+            textView1.setText("Your Review is: " + result);
         }
     }
 

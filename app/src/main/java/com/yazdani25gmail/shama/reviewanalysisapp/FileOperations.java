@@ -102,7 +102,7 @@ public class FileOperations {
             DocumentSentiment sentiment = service.getSentiment(params).execute();
             System.out.println(sentiment);
             //passing the result to be displayed at UI in the main tread
-            senti=sentiment.getSentiment().getType().name().toString();
+            //senti=sentiment.getSentiment().getType().name().toString();
             return sentiment.getSentiment().getType().name();
 
         }
