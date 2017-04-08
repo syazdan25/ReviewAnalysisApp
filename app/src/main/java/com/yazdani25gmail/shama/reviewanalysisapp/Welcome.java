@@ -11,6 +11,7 @@ public class Welcome extends AppCompatActivity {
     //Create button Object
     public Button button2;
     public Button button3;
+    public Button button9;
     public void init()
     {
 
@@ -27,6 +28,7 @@ public class Welcome extends AppCompatActivity {
         //Instantiate the Object
         button2= (Button)findViewById(R.id.button2);
         button3= (Button)findViewById(R.id.button3);
+        button9= (Button)findViewById(R.id.button9);
 
         //Go to single review analysis activity on clicking button2
         button2.setOnClickListener(new View.OnClickListener() {
@@ -45,5 +47,14 @@ public class Welcome extends AppCompatActivity {
                 startActivity(page2);
             }
         });
+
+        button9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent page3= new Intent(Welcome.this,AnalyzeURL.class);
+                startActivity(page3);
+            }
+        });
+
     }
 }

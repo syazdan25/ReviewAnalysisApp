@@ -1,5 +1,7 @@
 package com.yazdani25gmail.shama.reviewanalysisapp;
 
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +22,7 @@ import android.webkit.WebChromeClient;
 import com.ibm.watson.developer_cloud.alchemy.v1.AlchemyLanguage;
 import com.ibm.watson.developer_cloud.alchemy.v1.model.DocumentSentiment;
 
-public class MainActivity extends AppCompatActivity {
+public class AnalyzeURL extends AppCompatActivity {
 
 
     TextView textView;
@@ -31,12 +33,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView thumb;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_analyze_url);
 
         getWindow().setBackgroundDrawableResource(R.drawable.webapp_fade);
 
@@ -48,21 +48,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         //fire action when button is pressed
-
         button.setOnClickListener(new View.OnClickListener() {@Override
 
-            public void onClick(View v) {
-                System.out.println("Logging to the console that the button pressed for the text : " + editText.getText());
-                textView.setText("Displaying at UI the sentiment to be checked for : " + editText.getText());
+        public void onClick(View v) {
+            System.out.println("Logging to the console that the button pressed for the text : " + editText.getText());
+            textView.setText("Displaying at UI the sentiment to be checked for : " + editText.getText());
+            AskWatsonTask task = new AskWatsonTask();
+            task.execute(new String[]{});
 
-                AskWatsonTask task = new AskWatsonTask();
-                task.execute(new String[]{});
-
-            }
+        }
 
         });
-    }
 
+
+
+    }
 
     private class AskWatsonTask extends AsyncTask<String, Void, String> {
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             service.setApiKey("30d76f945d0b9cc098b98f4ee11b90777602cdea");
 
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put(AlchemyLanguage.TEXT, editText.getText());
+            params.put(AlchemyLanguage.URL, editText.getText());
             DocumentSentiment sentiment = service.getSentiment(params).execute();
             System.out.println(sentiment);
 
@@ -105,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
             else if(result== "NEUTRAL"){
                 thumb.setImageResource(R.drawable.neutral);
             }
-            textView.setText("Enter Review for analysis");
+            textView.setText("Enter url of product for analysis");
             textView1 = (TextView) findViewById(R.id.textView1);
-            textView1.setText("Your Review is: " + result);
+            textView1.setText("Overall Review of this product is: " + result);
         }
     }
 
